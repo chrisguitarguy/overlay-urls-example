@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Link, withRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { Table, Button, Drawer, Form, Input } from 'antd';
 
 const johnId = 'b108b49c-08e2-4613-b2af-db13c7f2a5c7';
@@ -56,7 +56,7 @@ function DrawerFooter({ onClose }) {
     );
 }
 
-function EditDrawer({ visible, person, history }) {
+function EditDrawer({ visible, person, onClose }) {
     // make sure we don't break anything if person is `null` (no matched URL)
     if (!person) {
         person = {
@@ -64,8 +64,6 @@ function EditDrawer({ visible, person, history }) {
             name: '',
         };
     }
-
-    const onClose = () => history.push('/');
 
     // form here doesn't actually work, form is not the point of the tutorial.
     return (
@@ -82,18 +80,16 @@ function EditDrawer({ visible, person, history }) {
     );
 }
 
-const EditDrawerWithRouter = withRouter(EditDrawer);
-
-
 export default function App() {
     return (
         <BrowserRouter>
             <div style={{padding: '2rem'}}>
                 <Table dataSource={tableDataSource} columns={tableColumns} />
-                <Route path="/edit/:id">{({ match }) => (
-                    <EditDrawerWithRouter
+                <Route path="/edit/:id">{({ match, history }) => (
+                    <EditDrawer
                         visible={match !== null}
                         person={match ? people[match.params.id] : null}
+                        onClose={() => history.push('/')}
                         />
                 )}</Route>
             </div>
